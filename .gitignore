@@ -2,3 +2,5 @@
 *.idea
 
 *.pyc
+
+/frontend/node_modules
