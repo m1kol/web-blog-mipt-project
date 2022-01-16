@@ -56,12 +56,33 @@ def get_article(id):
     return article_schema.jsonify(article)
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if current_user.is_authenticated:
+        return user_schema.jsonify(current_user)
+
+    email = request.json["email"]
+    username = request.json["username"]
+    password = request.json["password"]
+
+    if User.query.filter(User.username == username).all():
+        return "User already exists"
+
+    user = User(username=username, email=email)
+    user.set_password(password)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return user_schema.jsonify(user)
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticatec:
         return user_schema.jsonify(current_user)
 
-    user = User.query.filter(username=request.json["username"]).first()
+    user = User.query.filter(User.username == request.json["username"]).firts()
     if user and user.check_password(request.json["password"]):
         login_user(user, remember=request.json["remember"])
         return user_schema.jsonify(user)
