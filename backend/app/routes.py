@@ -1,8 +1,8 @@
 from flask import request, redirect
 from flask_login import current_user, login_required, logout_user, login_user
 
-from core import app, db
-from models import Article, User, article_schema, articles_schema, user_schema
+from . import app, db
+from .models import Article, User, article_schema, articles_schema, user_schema
 
 
 @app.route("/", methods=["GET"])
@@ -79,7 +79,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if current_user.is_authenticatec:
+    if current_user.is_authenticated:
         return user_schema.jsonify(current_user)
 
     user = User.query.filter(User.username == request.json["username"]).firts()
