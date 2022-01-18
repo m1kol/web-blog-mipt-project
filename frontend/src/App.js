@@ -22,6 +22,7 @@ function App() {
         <Route path="/article/:id" element={<Article isLoggedIn={isLoggedIn()}/>}/>
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
+        <Route path="/logout" element={<RecentPosts isLoggedIn={isLoggedIn()}/>} />
         <Route path="*" element={<RecentPosts isLoggedIn={isLoggedIn()}/>} />
       </Routes>
     </div>

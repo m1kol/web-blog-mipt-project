@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams} from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Menu from '../Menu/Menu';
 import './Profile.scss'
 
@@ -26,9 +26,9 @@ function Profile({ isLoggedIn }) {
                             <span>{article.date}</span>
                             <p>{article.text}</p>
                             {article.text.length > 300 && (
-                                <a href={`/article/${article.id}`}>
+                                <Link to={`/article/${article.id}`}>
                                     Посмотреть полностью
-                                </a>
+                                </Link>
                             )}
                         </div>
                     ))}

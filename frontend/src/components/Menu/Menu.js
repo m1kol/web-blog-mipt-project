@@ -3,6 +3,12 @@ import { NavLink } from 'react-router-dom';
 import './Menu.scss';
 
 function Menu({ isLoggedIn }) {
+  const loginLinks = {'Войти': '/login', 'Зарегистрироваться': '/signup'}
+
+  function logout() {
+    return true
+  }
+
   return (
     <nav className="Menu">
       <div className="main_links">
@@ -21,22 +27,24 @@ function Menu({ isLoggedIn }) {
           )}
         </ul>
       </div>
-      {!isLoggedIn && (
-        <div className="auth_links">
-          <ul>
-            <li>
-              <NavLink to="/login" className="menu-link">
-                Войти
+      <div className="auth_links">
+        <ul>
+        {!isLoggedIn ? 
+          Object.keys(loginLinks).map((key, index) => (
+            <li key={`nav-li-${index}`}>
+              <NavLink to={loginLinks[key]} className="menu-link">
+                {key}
               </NavLink>
             </li>
+          )) : (
             <li>
-              <NavLink to="/signup" className="menu-link">
-                Зарегистрироваться
+              <NavLink to="/logout" className="menu-link" onClick={logout}>
+                Выйти
               </NavLink>
             </li>
-          </ul>
-        </div>
-      )}
+        )}
+        </ul>
+      </div>
     </nav>
   )
 }
