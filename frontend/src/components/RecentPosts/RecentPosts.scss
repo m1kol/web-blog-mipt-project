@@ -1,0 +1,42 @@
+.RecentPosts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+
+    .article {
+        max-height: 200px;
+        border: 1px solid rgba(47, 137, 221, 0.3);
+        border-radius: 4px;
+        color: #000;
+        margin: 20px 20px 0;
+        padding: 5px 10px;
+        box-sizing: border-box;
+        width: 60%;
+
+        span {
+            color: rgba(0, 0, 0, 0.3);
+            font-size: 12px;
+
+            &:first-child {
+                color: rgb(47, 137, 221);
+            }
+        }
+
+        p {
+            margin: 5px 0;
+            max-height: 145px;
+            overflow: hidden;
+        }
+
+        .article_link {
+            text-decoration: none;
+            color: rgba(47, 137, 221, 0.6);
+
+            &:hover {
+                text-decoration: underline;
+                color: rgb(47, 137, 221);
+            }
+        }
+    }
+}
