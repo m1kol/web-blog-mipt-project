@@ -3,7 +3,7 @@ from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from core import db, ma, login_manager
+from . import db, ma, login_manager
 
 
 class Article(db.Model):
