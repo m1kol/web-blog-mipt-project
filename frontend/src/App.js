@@ -20,8 +20,8 @@ function App() {
         <Route path="/" element={<RecentPosts isLoggedIn={isLoggedIn()}/>} />
         <Route path="/profile/:user" element={<Profile isLoggedIn={isLoggedIn()}/>} />
         <Route path="/article/:id" element={<Article isLoggedIn={isLoggedIn()}/>}/>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/signup" element={<Signup/>} />
+        <Route path="/login" element={<Login isLoggedIn={isLoggedIn()}/>} />
+        <Route path="/signup" element={<Signup isLoggedIn={isLoggedIn()}/>} />
         <Route path="/logout" element={<RecentPosts isLoggedIn={isLoggedIn()}/>} />
         <Route path="*" element={<RecentPosts isLoggedIn={isLoggedIn()}/>} />
       </Routes>

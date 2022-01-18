@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
+import Menu from "../Menu/Menu";
+import './Auth.scss'
 
-function Login() {
+function Login({ isLoggedIn }) {
+    const [isErrorShown, setErrorShown] = useState(false)
+
+    function onChangeInputs(event) {
+        setErrorShown(false)
+    }
+
+    function submitForm(event) {
+
+    }
+
     return (
-        <div className="Auth">
-            <h2>Вход</h2>
-            <form action='login' method='POST'>
-                <span>Логин</span>
-                <input type='text' required></input>
-                <span>Пароль</span>
-                <input type='text' required></input>
-                <button>Войти</button>
-                {/* <a>Забыли пароль?</a> */}
-            </form>
-        </div>
+        <React.Fragment>
+            <Menu isLoggedIn={isLoggedIn}/>
+            <div className="Auth">
+                <h2>Вход</h2>
+                <form onSubmit={submitForm}>
+                    {isErrorShown && <div className='wrong_auth'>Неверные логин или пароль</div>}
+                    <span>Логин</span>
+                    <input type='text' onChange={onChangeInputs} required></input>
+                    <span>Пароль</span>
+                    <input type='password' onChange={onChangeInputs} required></input>
+                    <button type='submit'>Войти</button>
+                </form>
+            </div>
+        </React.Fragment>
     )
 }
 

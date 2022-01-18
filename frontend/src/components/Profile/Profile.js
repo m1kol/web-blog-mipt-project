@@ -25,11 +25,9 @@ function Profile({ isLoggedIn }) {
                         <div className="article" key={`article-${index}`}>
                             <span>{article.date}</span>
                             <p>{article.text}</p>
-                            {article.text.length > 300 && (
-                                <Link to={`/article/${article.id}`}>
-                                    Посмотреть полностью
-                                </Link>
-                            )}
+                            <Link to={`/article/${article.id}`} className='article_link'>
+                                Посмотреть полностью
+                            </Link>
                         </div>
                     ))}
                 </div>

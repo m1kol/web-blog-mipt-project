@@ -25,6 +25,18 @@
 
         p {
             margin: 5px 0;
+            max-height: 145px;
+            overflow: hidden;
+        }
+
+        .article_link {
+            text-decoration: none;
+            color: rgba(47, 137, 221, 0.6);
+
+            &:hover {
+                text-decoration: underline;
+                color: rgb(47, 137, 221);
+            }
         }
     }
 }
