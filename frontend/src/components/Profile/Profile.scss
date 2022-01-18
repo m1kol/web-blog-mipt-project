@@ -9,40 +9,87 @@
         }
     }
 
-    .Profile_articles {
-        width: 100%;
+    .Profile_main {
+        width: 60%;
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-bottom: 30px;
 
-        .article {
-            max-height: 200px;
-            border: 1px solid rgba(47, 137, 221, 0.3);
-            border-radius: 4px;
-            color: #000;
-            margin: 20px 20px 0;
-            padding: 5px 10px;
-            box-sizing: border-box;
-            width: 60%;
+        .Profile_add_article {
+            width: 100%;
+            margin-bottom: 30px;
 
-            span {
-                color: rgba(0, 0, 0, 0.3);
-                font-size: 12px;
+            form {
+                display: flex;
+                flex-direction: column;
+
+                textarea {
+                    height: 80px;
+                    width: 100%;
+                }
+
+                button {
+                    height: 30px;
+                    width: 80px;
+                    margin-top: 8px;
+                    box-sizing: border-box;
+                    background-color: rgba(47, 137, 221, 0.3);
+                    border: 1px solid rgba(47, 137, 221, 0.6);
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
             }
+        }
 
-            p {
-                margin: 5px 0;
-                max-height: 145px;
-                overflow: hidden;
-            }
+        .Profile_articles {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
-            .article_link {
-                text-decoration: none;
-                color: rgba(47, 137, 221, 0.6);
-    
-                &:hover {
-                    text-decoration: underline;
-                    color: rgb(47, 137, 221);
+            .article {
+                max-height: 200px;
+                border: 1px solid rgba(47, 137, 221, 0.3);
+                border-radius: 4px;
+                color: #000;
+                margin: 20px 20px 0;
+                padding: 5px 10px;
+                box-sizing: border-box;
+                width: 100%;
+
+                .delete_article {
+                    color: rgba(241, 40, 40, 0.9);
+                    display: inline-block;
+                    margin-left: 5px;
+
+                    &:hover {
+                        cursor: pointer;
+                        text-decoration: underline;
+                    }
+                }
+
+                span {
+                    color: rgba(0, 0, 0, 0.3);
+                    font-size: 12px;
+                }
+
+                p {
+                    margin: 5px 0;
+                    max-height: 145px;
+                    overflow: hidden;
+                }
+
+                .article_link {
+                    text-decoration: none;
+                    color: rgba(47, 137, 221, 0.6);
+        
+                    &:hover {
+                        text-decoration: underline;
+                        color: rgb(47, 137, 221);
+                    }
                 }
             }
         }
