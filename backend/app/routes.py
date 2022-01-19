@@ -1,57 +1,72 @@
-from flask import request, redirect
+from flask import request, make_response
 from flask_login import current_user, login_required, logout_user, login_user
 
 from . import app, db
-from .models import Article, User, article_schema, articles_schema, user_schema
+from .models import Article, User, ArticleSchema, UserSchema
+
+
+article_schema = ArticleSchema()
+articles_schema = ArticleSchema(many=True)
+user_schema = UserSchema(many=True)
 
 
 @app.route("/", methods=["GET"])
 @app.route("/articles", methods=["GET"])
-def get_all_articles():
-    all_articles = Article.query.all()
+def get_articles():
+    articles = Article.query.order_by(Article.date).limit(10)
 
-    return articles_schema.jsonify(all_articles)
+    return articles_schema.jsonify(articles)
 
 
 @app.route("/articles/add", methods=["POST"])
 def add_article():
-    author = request.json["author"]
-    title = request.json["title"]
-    content = request.json["content"]
+    author_name = request.form["user"]
+    title = request.form["title"]
+    text = request.form["text"]
 
-    article = Article(author=author, title=title, content=content)
-    db.session.add(article)
-    db.session.commit()
+    author = User.query.filter(User.username == author_name).first_or_404(f"No such user: {author_name}.")
+    article = Article(author=author, title=title, text=text)
+    try:
+        db.session.add(article)
+        db.session.commit()
+    except:
+        return make_response("Error saving article.", 500)
 
-    return article_schema.jsonify(article)
+    return make_response("Article added successfully!", 201)
 
 
 @app.route("/articles/<int:id>", methods=["DELETE"])
 def delete_article(id):
-    article = Article.query.get(id)
-    db.session.delete(article)
-    db.session.commit()
+    article = Article.query.get_or_404(id, "Article not found!")
+    try:
+        db.session.delete(article)
+        db.session.commit()
+    except:
+        return make_response("Error deleting article!", 500)
 
-    return 200
+    return make_response("Article successfully deleted!", 200)
 
 
 @app.route("/articles/<int:id>", methods=["PUT"])
 def update_article(id):
-    article = Article.query.get(id)
-    title = request.json["title"]
-    content = request.json["content"]
+    article = Article.query.get_or_404(id)
+    title = request.form["title"]
+    content = request.form["content"]
 
     article.title = title
     article.content = content
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        return make_response("Error updating article!", 500)
 
-    return article_schema.jsonify(article)
+    return make_response("Article successfully updated!", 201)
 
 
 @app.route("/articles/<int:id>", methods=["GET"])
 def get_article(id):
-    article = Article.query.get(id)
+    article = Article.query.get_or_404(id, "Article not found!")
 
     return article_schema.jsonify(article)
 
@@ -61,33 +76,29 @@ def register():
     if current_user.is_authenticated:
         return user_schema.jsonify(current_user)
 
-    email = request.json["email"]
-    username = request.json["username"]
-    password = request.json["password"]
+    user = User(email=request.form["email"], username=request.form["username"])
+    user.set_password(request.form["password"])
 
-    if User.query.filter(User.username == username).all():
-        return "User already exists"
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except:
+        return make_response("Error creating a user!", 500)
 
-    user = User(username=username, email=email)
-    user.set_password(password)
-
-    db.session.add(user)
-    db.session.commit()
-
-    return user_schema.jsonify(user)
+    return make_response("User successfully created!", 200)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return user_schema.jsonify(current_user)
+        return current_user.username
 
-    user = User.query.filter(User.username == request.json["username"]).firts()
-    if user and user.check_password(request.json["password"]):
-        login_user(user, remember=request.json["remember"])
+    user = User.query.filter(User.username == request.form["username"]).firts()
+    if user and user.check_password(request.form["password"]):
+        login_user(user, remember=True)
         return user_schema.jsonify(user)
 
-    return "Could not login user"
+    return make_response("Invalid username or password!", 401)
 
 
 @app.route("/logout")
@@ -95,11 +106,19 @@ def login():
 def logout():
     logout_user()
 
-    return redirect("/")
+    return make_response("Logged out.", 200)
+
+
+@app.route("/is_logged_in")
+def check_user_login():
+    if current_user.is_authenticated:
+        return current_user.username
+
+    return False
 
 
 @app.route("/user/<int:id>")
-def user_profile(id):
+def get_user_articles(id):
     user = User.query.get(id)
 
-    return user_schema.jsonify(user)
+    return articles_schema.jsonify(user.articles)
