@@ -7,7 +7,7 @@ from .models import Article, User, ArticleSchema, UserSchema
 
 article_schema = ArticleSchema()
 articles_schema = ArticleSchema(many=True)
-user_schema = UserSchema(many=True)
+user_schema = UserSchema()
 
 
 @app.route("/", methods=["GET"])
@@ -88,12 +88,12 @@ def register():
     return make_response("User successfully created!", 200)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["POST"])
 def login():
     if current_user.is_authenticated:
         return current_user.username
 
-    user = User.query.filter(User.username == request.form["username"]).firts()
+    user = User.query.filter(User.username == request.form["username"]).first()
     if user and user.check_password(request.form["password"]):
         login_user(user, remember=True)
         return user_schema.jsonify(user)
@@ -119,6 +119,6 @@ def check_user_login():
 
 @app.route("/user/<int:id>")
 def get_user_articles(id):
-    user = User.query.get(id)
+    user = User.query.get_or_404(id, "User not found!")
 
     return articles_schema.jsonify(user.articles)
