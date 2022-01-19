@@ -13,6 +13,11 @@
         padding: 5px 10px;
         box-sizing: border-box;
         width: 60%;
+        position: relative;
+
+        .profile_link {
+            text-decoration-color: rgb(47, 137, 221);
+        }
 
         span {
             color: rgba(0, 0, 0, 0.3);
@@ -36,6 +41,16 @@
             &:hover {
                 text-decoration: underline;
                 color: rgb(47, 137, 221);
+            }
+
+            &::before {
+                content: '';
+                bottom: 22px;
+                left: 0;
+                height: 14px;
+                width: 100%;
+                background-image: linear-gradient(to top, white, transparent);
+                position: absolute;
             }
         }
     }

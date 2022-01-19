@@ -5,6 +5,7 @@ import './RecentPosts.scss';
 
 function RecentPosts({ isLoggedIn }) {
     let getRecentPosts = () => {
+        // let response = fetch('')
         return [
             {'author': 'kate', 'date': '14.01.2022', 'text': `Предисловие: Наконец появилась возможность добраться до интернета, сейчас мы находимся в Панамском канале и здесь есть wifi. Я на судне уже больше месяца и пока я здесь, я писал все интересное что здесь происходит и вот наконец есть возможность этим поделиться. Фотографий пока не будет, их я выложу или позже, или уже когда вернусь домой. Итак, понеслась:
 
@@ -55,7 +56,9 @@ function RecentPosts({ isLoggedIn }) {
             <div className="RecentPosts">
                 {getRecentPosts().map((article, index) => (
                     <div className="article" key={`recent-${index}`}>
-                        <span>{`@${article.author} `}</span>
+                        <Link to={`/profile/${article.author}`} className='profile_link'>
+                            <span>{`@${article.author} `}</span>
+                        </Link>
                         <span>{article.date}</span>
                         <p>{article.text}</p>
                         <Link to={`/article/${article.id}`} className='article_link'>

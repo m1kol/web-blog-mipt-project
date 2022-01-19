@@ -11,7 +11,10 @@ let userName = 'kate'
 
 function App() {
   let isLoggedIn = () => {
-    return 'kate' //возвращает false или userName
+    // let response = await fetch('/isLoggedIn')
+    // let text = await response.text()
+    // return text //возвращает false или userName
+    return 'kate'
   }
 
   return (
