@@ -12,25 +12,11 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     date = db.Column(db.DateTime, default=datetime.utcnow())
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
+    title = db.Column(db.String(100))
+    text = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return f"<Article {self.id}>"
-
-
-class ArticleSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Article
-
-
-article_schema = ArticleSchema()
-articles_schema = ArticleSchema(many=True)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
 
 
 class User(db.Model, UserMixin):
@@ -40,7 +26,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, unique=True)
     username = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
-    # authenticated = db.Column(db.Boolean, default=False)
+
     created_on = db.Column(db.DateTime(), default=datetime.utcnow)
     updated_on = db.Column(db.DateTime(), default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -56,6 +42,11 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
         model = User
@@ -65,5 +56,13 @@ class UserSchema(ma.SQLAlchemySchema):
     username = ma.auto_field()
 
 
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
+class ArticleSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Article
+        include_fk = True
+
+    id = ma.auto_field()
+    date = ma.auto_field()
+    author = ma.Nested(UserSchema(only=("username",)))
+    title = ma.auto_field()
+    text = ma.auto_field()
