@@ -3,21 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import Menu from "../Menu/Menu";
 import './Auth.scss'
 
-function Signup({ isLoggedIn }) {
+function Signup({ isLoggedIn, updateLogin }) {
     let navigate = useNavigate()
 
     const [isLoginErrShown, setLoginErrShown] = useState(false)
     const [isPasswErrShown, setPasswShown] = useState(false)
 
-    function onChangeLogin(event) {
+    let onChangeLogin = (event) => {
         setLoginErrShown(false)
     }
 
-    function onChangePassword(event) {
+    let onChangePassword = (event) => {
         setPasswShown(false)
     }
 
-    function submitForm(event) {
+    let submitForm = async (event) => {
         event.preventDefault()
         let user = event.target['login'].value
         let email = event.target['email'].value
@@ -28,23 +28,30 @@ function Signup({ isLoggedIn }) {
             setPasswShown(true)
         }
         else {
-            // let response = await fetch(
-            //     '/login',
-            //     {
-            //         method: 'POST',
-            //         headers: {
-            //             "Content-Type": "application/x-www-form-urlencoded",
-            //         },
-            //         body: `user=${user}&email=${email}&password=${password}`,
-            //     }
-            // )
+            let response = await fetch(
+                '/register',
+                {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `username=${user}&email=${email}&password=${password}`,
+                }
+            )
+
+            if (response.ok) {
+                updateLogin(user)
+                navigate(`/profile/${user}`)
+            }
+            else if (response.status == 409) {
+                setLoginErrShown(true)
+            }
         }
-        navigate(`/profile/${user}`)
     }
 
     return (
         <React.Fragment>
-            <Menu isLoggedIn={isLoggedIn}/>
+            <Menu isLoggedIn={isLoggedIn} updateLogin={updateLogin}/>
             <div className="Auth">
                 <h2>Регистрация</h2>
                 <form onSubmit={submitForm}>

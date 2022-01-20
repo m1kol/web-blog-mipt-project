@@ -3,37 +3,41 @@ import { useNavigate } from 'react-router-dom';
 import Menu from "../Menu/Menu";
 import './Auth.scss'
 
-function Login({ isLoggedIn }) {
+function Login({ isLoggedIn, updateLogin }) {
     let navigate = useNavigate()
 
     const [isErrorShown, setErrorShown] = useState(false)
 
-    function onChangeInputs(event) {
+    let onChangeInputs = (event) => {
         setErrorShown(false)
     }
 
-    async function submitForm(event) {
+    let submitForm = async (event) => {
         event.preventDefault()
         let user = event.target['login'].value
         let password = event.target['password'].value
 
-        navigate(`/profile/${user}`)
+        let response = await fetch(
+            '/login',
+            {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `username=${user}&password=${password}`,
+            }
+        )
 
-        // let response = await fetch(
-        //     '/login',
-        //     {
-        //         method: 'POST',
-        //         headers: {
-        //             "Content-Type": "application/x-www-form-urlencoded",
-        //         },
-        //         body: `user=${user}&password=${password}`,
-        //     }
-        // )
+        if (response.ok) {
+            updateLogin(user)
+            navigate(`/profile/${user}`)
+        }
+        else setErrorShown(true)
     }
 
     return (
         <React.Fragment>
-            <Menu isLoggedIn={isLoggedIn}/>
+            <Menu isLoggedIn={isLoggedIn} updateLogin={updateLogin}/>
             <div className="Auth">
                 <h2>Вход</h2>
                 <form onSubmit={submitForm}>
