@@ -34,6 +34,10 @@ module.exports = {
         hot: true,
         proxy: {
             '/': 'http://localhost:8008'
+        },
+        client: {
+            logging: 'error',
+            overlay: false,
         }
     },
     module: {
