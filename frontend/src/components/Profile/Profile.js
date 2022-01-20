@@ -1,32 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Menu from '../Menu/Menu';
 import './Profile.scss'
 
 function Profile({ isLoggedIn }) {
+    const [posts, setPosts] = useState([])
+
+    let params = useParams()
+    let userName = params.user
+
     let getArticles = (userName) => {
         // let response = await fetch(`/user/${userName}`)
+        // let json = await response.json()
+        // return json
         return [
             {'date': '14.01.2022', 'text': 'Первый пост', 'id': 2},
             {'date': '02.01.2022', 'text': 'Второй пост', 'id': 1}
         ]
     }
 
-    let params = useParams()
-    let userName = params.user
+    useEffect(async () => {
+        let articles = getArticles(userName)
+        setPosts(articles)
+    }, [posts])
 
-    function deleteArticle(articleId) {
+    let parseDate = (date) => {
+        let dateArr = date.slice(0, 10).split('-')
+        return `${dateArr[2]}.${dateArr[1]}.${dateArr[0].slice(2)}`
+    }
+
+    let deleteArticle = (articleId) => {
         // let response = await fetch(
         //     `/articles/${articleId}`,
         //     {method: 'DELETE'}
         // )
+        setPosts(posts.filter(post => true))
     }
 
-    function createArticle(event) {
-        console.log(event)
-        let user = ''
-        let date = ''
-        let text = ''
+    let createArticle = (event) => {
+        event.preventDefault()
+        let user = isLoggedIn
+        let text = event.target['text'].value
 
         // let response = await fetch(
         //     '/articles/add',
@@ -38,6 +52,8 @@ function Profile({ isLoggedIn }) {
         //         body: `user=${user}&date=${date}&date=${text}`
         //     }
         // )
+        event.target['text'].value = ''
+        setPosts(posts.concat())
     }
 
     return (
@@ -51,7 +67,7 @@ function Profile({ isLoggedIn }) {
                     <div className="Profile_add_article">
                         <form onSubmit={createArticle}>
                             <span>Создать пост</span>
-                            <textarea></textarea>
+                            <textarea name='text'></textarea>
                             <button type='submit'>Создать</button>
                         </form>
                     </div>
