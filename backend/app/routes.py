@@ -15,7 +15,8 @@ user_schema = UserSchema()
 def get_articles():
     articles = Article.query.order_by(Article.date).limit(10)
     response = articles_schema.jsonify(articles)
-    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
     return response
 
 
@@ -31,9 +32,15 @@ def add_article():
         db.session.add(article)
         db.session.commit()
     except:
-        return make_response("Error saving article.", 500)
+        response = make_response("Error saving article.", 500)
+        response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return make_response("Article added successfully!", 201)
+        return response
+
+    response = make_response("Article added successfully!", 201)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
+    return response
 
 
 @app.route("/articles/<int:id>", methods=["DELETE"])
@@ -43,9 +50,15 @@ def delete_article(id):
         db.session.delete(article)
         db.session.commit()
     except:
-        return make_response("Error deleting article!", 500)
+        response = make_response("Error deleting article.", 500)
+        response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return make_response("Article successfully deleted!", 200)
+        return response
+
+    response = make_response("Article successfully deleted!", 201)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
+    return response
 
 
 @app.route("/articles/<int:id>", methods=["PUT"])
@@ -60,16 +73,24 @@ def update_article(id):
     try:
         db.session.commit()
     except:
-        return make_response("Error updating article!", 500)
+        response = make_response("Error updating article.", 500)
+        response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return make_response("Article successfully updated!", 201)
+        return response
+
+    response = make_response("Article successfully updated!", 201)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
+    return response
 
 
 @app.route("/articles/<int:id>", methods=["GET"])
 def get_article(id):
     article = Article.query.get_or_404(id, "Article not found!")
+    response = make_response(article_schema.jsonify(article), 200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return article_schema.jsonify(article)
+    return response
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -84,9 +105,15 @@ def register():
         db.session.add(user)
         db.session.commit()
     except:
-        return make_response("Error creating a user!", 500)
+        response = make_response("Error creating a user.", 500)
+        response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return make_response("User successfully created!", 200)
+        return response
+
+    response = make_response("User successfully created!", 200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
+    return response
 
 
 @app.route("/login", methods=["POST"])
@@ -97,17 +124,25 @@ def login():
     user = User.query.filter(User.username == request.form["username"]).first()
     if user and user.check_password(request.form["password"]):
         login_user(user, remember=True)
-        return user_schema.jsonify(user)
+        response = make_response(user_schema.jsonify(user), 200)
+        response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return make_response("Invalid username or password!", 401)
+        return response
+
+    response = make_response("Invalid username or password!", 401)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
+    return response
 
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
+    response = make_response("Logged out.", 200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return make_response("Logged out.", 200)
+    return response
 
 
 @app.route("/is_logged_in")
@@ -118,8 +153,10 @@ def check_user_login():
     return False
 
 
-@app.route("/user/<int:id>")
-def get_user_articles(id):
-    user = User.query.get_or_404(id, "User not found!")
+@app.route("/user/<string:username>")
+def get_user_articles(username):
+    user = User.query.filter(User.username == username).first_or_404("User not found!")
+    response = make_response(articles_schema.jsonify(user.articles), 200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return articles_schema.jsonify(user.articles)
+    return response
