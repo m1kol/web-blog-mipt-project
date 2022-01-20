@@ -31,7 +31,10 @@ module.exports = {
         },
         open: true,
         port: 8000,
-        hot: true
+        hot: true,
+        proxy: {
+            '/': 'http://localhost:8008'
+        }
     },
     module: {
         rules: [
