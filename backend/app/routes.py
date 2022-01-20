@@ -1,5 +1,6 @@
 from flask import request, make_response
 from flask_login import current_user, login_required, logout_user, login_user
+from sqlalchemy import desc
 
 from . import app, db
 from .models import Article, User, ArticleSchema, UserSchema
@@ -13,7 +14,7 @@ user_schema = UserSchema()
 @app.route("/", methods=["GET"])
 @app.route("/articles", methods=["GET"])
 def get_articles():
-    articles = Article.query.order_by(Article.date).limit(10)
+    articles = Article.query.order_by(desc(Article.date)).limit(10)
     response = articles_schema.jsonify(articles)
     response.headers["Access-Control-Allow-Origin"] = "*"
 
@@ -98,8 +99,19 @@ def register():
     if current_user.is_authenticated:
         return user_schema.jsonify(current_user)
 
-    user = User(email=request.form["email"], username=request.form["username"])
-    user.set_password(request.form["password"])
+    email = request.form["email"]
+    username = request.form["username"]
+    password = request.form["password"]
+
+    user = User.query.filter(User.username == username).first()
+    if user is not None:
+        response = make_response("User already exists.", 409)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+
+        return response
+
+    user = User(email=email, username=username)
+    user.set_password(password)
 
     try:
         db.session.add(user)
