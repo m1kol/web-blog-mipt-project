@@ -5,6 +5,7 @@ import './Profile.scss'
 
 function Profile({ isLoggedIn }) {
     let getArticles = (userName) => {
+        // let response = await fetch(`/user/${userName}`)
         return [
             {'date': '14.01.2022', 'text': 'Первый пост', 'id': 2},
             {'date': '02.01.2022', 'text': 'Второй пост', 'id': 1}
@@ -14,12 +15,29 @@ function Profile({ isLoggedIn }) {
     let params = useParams()
     let userName = params.user
 
-    function deleteArticle(user, articleId) {
-        //удаляем
+    function deleteArticle(articleId) {
+        // let response = await fetch(
+        //     `/articles/${articleId}`,
+        //     {method: 'DELETE'}
+        // )
     }
 
     function createArticle(event) {
+        console.log(event)
+        let user = ''
+        let date = ''
+        let text = ''
 
+        // let response = await fetch(
+        //     '/articles/add',
+        //     {
+        //         method: 'POST',
+        //         headers: {
+        //             "Content-Type": "application/x-www-form-urlencoded",
+        //         },
+        //         body: `user=${user}&date=${date}&date=${text}`
+        //     }
+        // )
     }
 
     return (
@@ -43,7 +61,7 @@ function Profile({ isLoggedIn }) {
                                 <span>{`${article.date}`}</span>
                                 {isLoggedIn && isLoggedIn == userName && (
                                     <span className='delete_article' 
-                                        onClick={(event) => deleteArticle(userName, article.id)}>
+                                        onClick={(event) => deleteArticle(article.id)}>
                                         Удалить пост
                                     </span>
                                 )}

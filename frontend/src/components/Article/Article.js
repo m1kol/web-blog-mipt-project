@@ -8,6 +8,7 @@ function Article({ isLoggedIn }) {
     let articleId = params.id
 
     function getArticle(id) {
+        // let response = await fetch(`/article/${id}`)
         return {'author': 'kate', 'date': '14.01.2022', 'text': 'Пост'}
     }
 

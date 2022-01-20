@@ -1,12 +1,14 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Menu.scss';
 
 function Menu({ isLoggedIn }) {
   const loginLinks = {'Войти': '/login', 'Зарегистрироваться': '/signup'}
+  let navigate = useNavigate()
 
   function logout() {
-    return true
+    // let response = await fetch('/logout')
+    navigate('/')
   }
 
   return (

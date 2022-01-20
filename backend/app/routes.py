@@ -14,8 +14,9 @@ user_schema = UserSchema()
 @app.route("/articles", methods=["GET"])
 def get_articles():
     articles = Article.query.order_by(Article.date).limit(10)
-
-    return articles_schema.jsonify(articles)
+    response = articles_schema.jsonify(articles)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 @app.route("/articles/add", methods=["POST"])
