@@ -10,11 +10,10 @@ import './App.scss';
 function App() {
   const [login, setLogin] = useState(false)
 
-  let isLoggedIn = () => {
-    // let response = await fetch('/isLoggedIn')
-    // let text = await response.text()
-    // return text //возвращает false или userName
-    return 'kate'
+  let isLoggedIn = async () => {
+    let response = await fetch('/is_logged_in')
+    let json = await response.json()
+    return json.is_logged_in ? json.username : json.is_logged_in
   }
 
   useEffect(async () => {
@@ -22,16 +21,20 @@ function App() {
     setLogin(login)
   }, [])
 
+  let updateLogin = (newLogin) => {
+    setLogin(newLogin)
+  }
+
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<RecentPosts isLoggedIn={login}/>} />
-        <Route path="/profile/:user" element={<Profile isLoggedIn={login}/>} />
-        <Route path="/article/:id" element={<Article isLoggedIn={login}/>}/>
-        <Route path="/login" element={<Login isLoggedIn={login}/>} />
-        <Route path="/signup" element={<Signup isLoggedIn={login}/>} />
-        <Route path="/logout" element={<RecentPosts isLoggedIn={login}/>} />
-        <Route path="*" element={<RecentPosts isLoggedIn={login}/>} />
+        <Route path="/" element={<RecentPosts isLoggedIn={login} updateLogin={updateLogin}/>} />
+        <Route path="/profile/:user" element={<Profile isLoggedIn={login} updateLogin={updateLogin}/>} />
+        <Route path="/article/:id" element={<Article isLoggedIn={login} updateLogin={updateLogin}/>}/>
+        <Route path="/login" element={<Login isLoggedIn={login} updateLogin={updateLogin}/>} />
+        <Route path="/signup" element={<Signup isLoggedIn={login}  updateLogin={updateLogin}/>} />
+        <Route path="/logout" element={<RecentPosts isLoggedIn={login} updateLogin={updateLogin}/>} />
+        <Route path="*" element={<RecentPosts isLoggedIn={login} updateLogin={updateLogin}/>} />
       </Routes>
     </div>
   )

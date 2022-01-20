@@ -2,13 +2,16 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Menu.scss';
 
-function Menu({ isLoggedIn }) {
+function Menu({ isLoggedIn, updateLogin }) {
   const loginLinks = {'Войти': '/login', 'Зарегистрироваться': '/signup'}
   let navigate = useNavigate()
 
-  function logout() {
-    // let response = await fetch('/logout')
-    navigate('/')
+  let logout = async () => {
+    let response = await fetch('/logout')
+    if (response.ok) {
+      updateLogin(false)
+      navigate('/')
+    }
   }
 
   return (

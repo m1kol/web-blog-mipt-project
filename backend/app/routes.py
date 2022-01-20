@@ -147,10 +147,14 @@ def logout():
 
 @app.route("/is_logged_in")
 def check_user_login():
-    if current_user.is_authenticated:
-        return current_user.username
+    response = {
+        "is_logged_in": current_user.is_authenticated,
+        "username": current_user.username if current_user.is_authenticated else ""
+    }
+    response = make_response(response, 200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
 
-    return False
+    return response
 
 
 @app.route("/user/<string:username>")

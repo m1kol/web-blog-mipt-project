@@ -3,7 +3,7 @@ import Menu from '../Menu/Menu';
 import { Link } from 'react-router-dom';
 import './RecentPosts.scss';
 
-function RecentPosts({ isLoggedIn }) {
+function RecentPosts({ isLoggedIn, updateLogin }) {
     const [posts, setPosts] = useState([])
 
     let getRecentPosts = async () => {
@@ -24,7 +24,7 @@ function RecentPosts({ isLoggedIn }) {
 
     return (
         <React.Fragment>
-            <Menu isLoggedIn={isLoggedIn}/>
+            <Menu isLoggedIn={isLoggedIn} updateLogin={updateLogin}/>
             <div className="RecentPosts">
                 {posts.map((article, index) => (
                     <div className="article" key={`recent-${index}`}>
