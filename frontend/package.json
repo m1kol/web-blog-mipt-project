@@ -2,7 +2,7 @@
   "name": "web-blog-mipt-project",
   "version": "1.0.0",
   "private": true,
-  "proxy": "http://localhost:8008",
+  "proxy": "http://127.0.0.1:8008",
   "description": "",
   "main": "index.js",
   "scripts": {

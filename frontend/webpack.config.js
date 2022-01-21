@@ -33,7 +33,7 @@ module.exports = {
         port: 8000,
         hot: true,
         proxy: {
-            '/': 'http://localhost:8008'
+            '/': 'http://127.0.0.1:8008'
         },
         client: {
             logging: 'error',
