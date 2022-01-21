@@ -172,6 +172,7 @@ def check_user_login():
 @app.route("/user/<string:username>")
 def get_user_articles(username):
     user = User.query.filter(User.username == username).first_or_404("User not found!")
+    user.articles.reverse()
     response = make_response(articles_schema.jsonify(user.articles), 200)
     response.headers["Access-Control-Allow-Origin"] = "*"
 
